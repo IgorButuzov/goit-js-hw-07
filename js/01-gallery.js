@@ -5,6 +5,7 @@ const gallery = document.querySelector('.gallery');
 
 gallery.addEventListener('click', onPictureClick);
 
+
 const makePictures = picture => {
     const {preview, original, description} = picture
     return `
@@ -44,11 +45,31 @@ function onPictureClick(evt) {
     openModal();
 }   
 
+// const openModal = () => {
+//     const instance = basicLightbox.create(`
+//     <img 
+//     src= '${currentModalPicture}'
+//     alt="'${currentModalDescription}'">
+// `)
+//     instance.show();
+// };
+
 const openModal = () => {
     const instance = basicLightbox.create(`
-    <img 
-    src= '${currentModalPicture}'
-    alt="'${currentModalDescription}'">
-`)
+        <img 
+        src= '${currentModalPicture}'
+        alt="'${currentModalDescription}'">  `,
+        {
+            onShow: instance =>
+            { document.addEventListener('keydown', onEscapeKeyDown); },
+            onClose: instance =>
+            { document.removeEventListener('keydown', onEscapeKeyDown); },
+        });
     instance.show();
+    function onEscapeKeyDown(event) {
+        if (event.code !== 'Escape') {
+            return;
+        }
+        instance.close();
+    }
 };
