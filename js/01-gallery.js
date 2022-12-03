@@ -2,7 +2,8 @@ import { galleryItems } from './gallery-items.js';
 // Change code below this line
 
 const gallery = document.querySelector('.gallery');
-const galleryItem = document.querySelector('.gallery__item')
+
+gallery.addEventListener('click', onPictureClick);
 
 const makePictures = picture => {
     const {preview, original, description} = picture
@@ -20,16 +21,34 @@ const makePictures = picture => {
 const makeGallery = galleryItems.map(makePictures)
                                 .join('');
 
-gallery.insertAdjacentHTML('beforeend', makeGallery)
+gallery.insertAdjacentHTML('beforeend', makeGallery);
 
-gallery.addEventListener('click', onPictureClick);
+let currentModalPicture;
+let currentModalDescription;
 
 function onPictureClick(evt) {
     evt.preventDefault();
+
     const galleryEl = evt.target.classList.contains('gallery__image');
+
     if (!galleryEl) {
         return
     }
-    let image = evt.target;
-    console.log(image.dataset.source);
+    
+    currentModalPicture = evt.target.dataset.source;
+    currentModalDescription = evt.target.alt;
+    
+    console.log(currentModalPicture);
+    console.log(currentModalDescription);
+
+    openModal();
 }   
+
+const openModal = () => {
+    const instance = basicLightbox.create(`
+    <img 
+    src= '${currentModalPicture}'
+    alt="'${currentModalDescription}'">
+`)
+    instance.show();
+};
